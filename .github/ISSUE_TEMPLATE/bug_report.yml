@@ -1,0 +1,61 @@
+name: Bug Report
+description: Report a problem or unexpected behavior.
+title: "[Product] "
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Replace `[Product]` in the title with the app name: Articles Hub, Machinery Yard, or Ads Hub.
+        Set **Milestone** and **Iteration** from the sidebar after submitting.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What went wrong, and what did you expect instead?
+      placeholder: |
+        Clicking "Save" on the ad form does nothing.
+        Expected: the ad saves and I return to the list.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshot or screen recording
+      description: Drag and drop a screenshot or short video here. Console / network errors also help.
+      placeholder: Paste image or video, or attach a file by dragging it into this box.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Where did it happen?
+      options:
+        - Desktop (Tauri)
+        - Web (Chrome)
+        - Web (Safari)
+        - Web (Firefox)
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: hotfix
+    attributes:
+      label: Severity
+      options:
+        - label: Needs hotfix — block production or fix ASAP
