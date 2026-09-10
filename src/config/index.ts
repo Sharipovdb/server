@@ -12,11 +12,14 @@ export type NodeEnv = 'development' | 'production' | 'test';
 export interface AppConfig {
   readonly nodeEnv: NodeEnv;
   readonly port: number;
+  readonly databaseUrl: string;
   readonly isProduction: boolean;
   readonly isDevelopment: boolean;
 }
 
-const REQUIRED_ENV_VARS = ['NODE_ENV', 'PORT'] as const;
+const REQUIRED_ENV_VARS = ['NODE_ENV', 'PORT', 'DATABASE_URL'] as const;
+
+const DATABASE_URL_PROTOCOLS = ['postgres:', 'postgresql:'];
 
 type RequiredEnvVar = (typeof REQUIRED_ENV_VARS)[number];
 
@@ -71,6 +74,26 @@ function parsePort(raw: string): number {
   return port;
 }
 
+function parseDatabaseUrl(raw: string): string {
+  let protocol: string;
+
+  try {
+    protocol = new URL(raw).protocol;
+  } catch {
+    throw new ConfigError(
+      'Invalid DATABASE_URL value. Expected a postgresql:// connection string.',
+    );
+  }
+
+  if (!DATABASE_URL_PROTOCOLS.includes(protocol)) {
+    throw new ConfigError(
+      `Invalid DATABASE_URL protocol "${protocol}". Expected one of: ${DATABASE_URL_PROTOCOLS.join(', ')}.`,
+    );
+  }
+
+  return raw;
+}
+
 function buildConfig(): AppConfig {
   const env = readRequiredEnv();
   const nodeEnv = parseNodeEnv(env.NODE_ENV);
@@ -78,6 +101,7 @@ function buildConfig(): AppConfig {
   return Object.freeze({
     nodeEnv,
     port: parsePort(env.PORT),
+    databaseUrl: parseDatabaseUrl(env.DATABASE_URL),
     isProduction: nodeEnv === 'production',
     isDevelopment: nodeEnv === 'development',
   });
