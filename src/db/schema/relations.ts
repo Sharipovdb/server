@@ -1,268 +1,88 @@
-import { relations } from 'drizzle-orm/relations';
-import {
-  aspNetRolesInTransportation,
-  aspNetRoleClaimsInTransportation,
-  aspNetUsersInTransportation,
-  absenceNoticesInTransportation,
-  aspNetUserClaimsInTransportation,
-  vehiclesInTransportation,
-  crewMembershipsInTransportation,
-  crewsInTransportation,
-  transportDaysInTransportation,
-  taxiExpenseInTransportation,
-  monthlyTransportSheetsInTransportation,
-  routesInTransportation,
-  tariffsInTransportation,
-  monthlyTransportSheetDaysInTransportation,
-  aspNetUserRolesInTransportation,
-  aspNetUserLoginsInTransportation,
-  aspNetUserTokensInTransportation,
-} from './schema.ts';
+import { relations } from 'drizzle-orm';
+import { absenceNotices } from './absence-notices.ts';
+import { crewMemberships, crews } from './crews.ts';
+import { roles, userRoles, users } from './identity.ts';
+import { monthlyTransportSheetDays, monthlyTransportSheets } from './monthly-transport-sheets.ts';
+import { routes } from './routes.ts';
+import { tariffs } from './tariffs.ts';
+import { taxiExpenses, transportDays } from './transport-days.ts';
+import { vehicles } from './vehicles.ts';
 
-export const aspNetRoleClaimsInTransportationRelations = relations(
-  aspNetRoleClaimsInTransportation,
-  ({ one }) => ({
-    aspNetRolesInTransportation: one(aspNetRolesInTransportation, {
-      fields: [aspNetRoleClaimsInTransportation.roleId],
-      references: [aspNetRolesInTransportation.id],
-    }),
-  }),
-);
-
-export const aspNetRolesInTransportationRelations = relations(
-  aspNetRolesInTransportation,
-  ({ many }) => ({
-    aspNetRoleClaimsInTransportations: many(aspNetRoleClaimsInTransportation),
-    aspNetUserRolesInTransportations: many(aspNetUserRolesInTransportation),
-  }),
-);
-
-export const absenceNoticesInTransportationRelations = relations(
-  absenceNoticesInTransportation,
-  ({ one }) => ({
-    aspNetUsersInTransportation: one(aspNetUsersInTransportation, {
-      fields: [absenceNoticesInTransportation.userId],
-      references: [aspNetUsersInTransportation.id],
-    }),
-  }),
-);
-
-export const aspNetUsersInTransportationRelations = relations(
-  aspNetUsersInTransportation,
-  ({ many }) => ({
-    absenceNoticesInTransportations: many(absenceNoticesInTransportation),
-    aspNetUserClaimsInTransportations: many(aspNetUserClaimsInTransportation),
-    vehiclesInTransportations: many(vehiclesInTransportation),
-    crewMembershipsInTransportations: many(crewMembershipsInTransportation),
-    transportDaysInTransportations_driverId: many(transportDaysInTransportation, {
-      relationName: 'transportDaysInTransportation_driverId_aspNetUsersInTransportation_id',
-    }),
-    transportDaysInTransportations_loggedBy: many(transportDaysInTransportation, {
-      relationName: 'transportDaysInTransportation_loggedBy_aspNetUsersInTransportation_id',
-    }),
-    taxiExpenseInTransportations: many(taxiExpenseInTransportation),
-    monthlyTransportSheetsInTransportations_createdById: many(
-      monthlyTransportSheetsInTransportation,
-      {
-        relationName:
-          'monthlyTransportSheetsInTransportation_createdById_aspNetUsersInTransportation_id',
-      },
-    ),
-    monthlyTransportSheetsInTransportations_paidById: many(monthlyTransportSheetsInTransportation, {
-      relationName:
-        'monthlyTransportSheetsInTransportation_paidById_aspNetUsersInTransportation_id',
-    }),
-    monthlyTransportSheetsInTransportations_recipientId: many(
-      monthlyTransportSheetsInTransportation,
-      {
-        relationName:
-          'monthlyTransportSheetsInTransportation_recipientId_aspNetUsersInTransportation_id',
-      },
-    ),
-    crewsInTransportations_crewLeadId: many(crewsInTransportation, {
-      relationName: 'crewsInTransportation_crewLeadId_aspNetUsersInTransportation_id',
-    }),
-    crewsInTransportations_driverLeadId: many(crewsInTransportation, {
-      relationName: 'crewsInTransportation_driverLeadId_aspNetUsersInTransportation_id',
-    }),
-    aspNetUserRolesInTransportations: many(aspNetUserRolesInTransportation),
-    aspNetUserLoginsInTransportations: many(aspNetUserLoginsInTransportation),
-    aspNetUserTokensInTransportations: many(aspNetUserTokensInTransportation),
-  }),
-);
-
-export const aspNetUserClaimsInTransportationRelations = relations(
-  aspNetUserClaimsInTransportation,
-  ({ one }) => ({
-    aspNetUsersInTransportation: one(aspNetUsersInTransportation, {
-      fields: [aspNetUserClaimsInTransportation.userId],
-      references: [aspNetUsersInTransportation.id],
-    }),
-  }),
-);
-
-export const vehiclesInTransportationRelations = relations(vehiclesInTransportation, ({ one }) => ({
-  aspNetUsersInTransportation: one(aspNetUsersInTransportation, {
-    fields: [vehiclesInTransportation.driverId],
-    references: [aspNetUsersInTransportation.id],
-  }),
+export const usersRelations = relations(users, ({ many }) => ({
+  userRoles: many(userRoles),
 }));
 
-export const crewMembershipsInTransportationRelations = relations(
-  crewMembershipsInTransportation,
-  ({ one }) => ({
-    aspNetUsersInTransportation: one(aspNetUsersInTransportation, {
-      fields: [crewMembershipsInTransportation.userId],
-      references: [aspNetUsersInTransportation.id],
-    }),
-    crewsInTransportation: one(crewsInTransportation, {
-      fields: [crewMembershipsInTransportation.crewId],
-      references: [crewsInTransportation.id],
-    }),
-  }),
-);
-
-export const crewsInTransportationRelations = relations(crewsInTransportation, ({ one, many }) => ({
-  crewMembershipsInTransportations: many(crewMembershipsInTransportation),
-  transportDaysInTransportations: many(transportDaysInTransportation),
-  monthlyTransportSheetsInTransportations: many(monthlyTransportSheetsInTransportation),
-  aspNetUsersInTransportation_crewLeadId: one(aspNetUsersInTransportation, {
-    fields: [crewsInTransportation.crewLeadId],
-    references: [aspNetUsersInTransportation.id],
-    relationName: 'crewsInTransportation_crewLeadId_aspNetUsersInTransportation_id',
-  }),
-  aspNetUsersInTransportation_driverLeadId: one(aspNetUsersInTransportation, {
-    fields: [crewsInTransportation.driverLeadId],
-    references: [aspNetUsersInTransportation.id],
-    relationName: 'crewsInTransportation_driverLeadId_aspNetUsersInTransportation_id',
-  }),
-  routesInTransportation: one(routesInTransportation, {
-    fields: [crewsInTransportation.routeId],
-    references: [routesInTransportation.id],
-  }),
-  tariffsInTransportation: one(tariffsInTransportation, {
-    fields: [crewsInTransportation.tariffId],
-    references: [tariffsInTransportation.id],
-  }),
+export const rolesRelations = relations(roles, ({ many }) => ({
+  userRoles: many(userRoles),
 }));
 
-export const transportDaysInTransportationRelations = relations(
-  transportDaysInTransportation,
+export const userRolesRelations = relations(userRoles, ({ one }) => ({
+  user: one(users, { fields: [userRoles.userId], references: [users.id] }),
+  role: one(roles, { fields: [userRoles.roleId], references: [roles.id] }),
+}));
+
+export const vehiclesRelations = relations(vehicles, ({ one }) => ({
+  driver: one(users, { fields: [vehicles.driverId], references: [users.id] }),
+}));
+
+export const crewsRelations = relations(crews, ({ one }) => ({
+  route: one(routes, { fields: [crews.routeId], references: [routes.id] }),
+  tariff: one(tariffs, { fields: [crews.tariffId], references: [tariffs.id] }),
+  crewLead: one(users, { fields: [crews.crewLeadId], references: [users.id] }),
+  driverLead: one(users, { fields: [crews.driverLeadId], references: [users.id] }),
+}));
+
+export const crewMembershipsRelations = relations(crewMemberships, ({ one }) => ({
+  crew: one(crews, { fields: [crewMemberships.crewId], references: [crews.id] }),
+  user: one(users, { fields: [crewMemberships.userId], references: [users.id] }),
+}));
+
+export const absenceNoticesRelations = relations(absenceNotices, ({ one }) => ({
+  user: one(users, { fields: [absenceNotices.userId], references: [users.id] }),
+}));
+
+export const transportDaysRelations = relations(transportDays, ({ one, many }) => ({
+  crew: one(crews, { fields: [transportDays.crewId], references: [crews.id] }),
+  driver: one(users, { fields: [transportDays.driverId], references: [users.id] }),
+  loggedByUser: one(users, { fields: [transportDays.loggedBy], references: [users.id] }),
+  taxiExpenses: many(taxiExpenses),
+}));
+
+export const taxiExpensesRelations = relations(taxiExpenses, ({ one }) => ({
+  transportDay: one(transportDays, {
+    fields: [taxiExpenses.transportDayId],
+    references: [transportDays.id],
+  }),
+  paidBy: one(users, { fields: [taxiExpenses.paidById], references: [users.id] }),
+}));
+
+export const monthlyTransportSheetsRelations = relations(
+  monthlyTransportSheets,
   ({ one, many }) => ({
-    aspNetUsersInTransportation_driverId: one(aspNetUsersInTransportation, {
-      fields: [transportDaysInTransportation.driverId],
-      references: [aspNetUsersInTransportation.id],
-      relationName: 'transportDaysInTransportation_driverId_aspNetUsersInTransportation_id',
+    crew: one(crews, { fields: [monthlyTransportSheets.crewId], references: [crews.id] }),
+    recipient: one(users, {
+      fields: [monthlyTransportSheets.recipientId],
+      references: [users.id],
     }),
-    aspNetUsersInTransportation_loggedBy: one(aspNetUsersInTransportation, {
-      fields: [transportDaysInTransportation.loggedBy],
-      references: [aspNetUsersInTransportation.id],
-      relationName: 'transportDaysInTransportation_loggedBy_aspNetUsersInTransportation_id',
+    createdBy: one(users, {
+      fields: [monthlyTransportSheets.createdById],
+      references: [users.id],
     }),
-    crewsInTransportation: one(crewsInTransportation, {
-      fields: [transportDaysInTransportation.crewId],
-      references: [crewsInTransportation.id],
-    }),
-    taxiExpenseInTransportations: many(taxiExpenseInTransportation),
-    monthlyTransportSheetDaysInTransportations: many(monthlyTransportSheetDaysInTransportation),
+    paidBy: one(users, { fields: [monthlyTransportSheets.paidById], references: [users.id] }),
+    days: many(monthlyTransportSheetDays),
   }),
 );
 
-export const taxiExpenseInTransportationRelations = relations(
-  taxiExpenseInTransportation,
+export const monthlyTransportSheetDaysRelations = relations(
+  monthlyTransportSheetDays,
   ({ one }) => ({
-    aspNetUsersInTransportation: one(aspNetUsersInTransportation, {
-      fields: [taxiExpenseInTransportation.paidById],
-      references: [aspNetUsersInTransportation.id],
+    monthlyTransportSheet: one(monthlyTransportSheets, {
+      fields: [monthlyTransportSheetDays.monthlyTransportSheetId],
+      references: [monthlyTransportSheets.id],
     }),
-    transportDaysInTransportation: one(transportDaysInTransportation, {
-      fields: [taxiExpenseInTransportation.transportDayId],
-      references: [transportDaysInTransportation.id],
-    }),
-  }),
-);
-
-export const monthlyTransportSheetsInTransportationRelations = relations(
-  monthlyTransportSheetsInTransportation,
-  ({ one, many }) => ({
-    aspNetUsersInTransportation_createdById: one(aspNetUsersInTransportation, {
-      fields: [monthlyTransportSheetsInTransportation.createdById],
-      references: [aspNetUsersInTransportation.id],
-      relationName:
-        'monthlyTransportSheetsInTransportation_createdById_aspNetUsersInTransportation_id',
-    }),
-    aspNetUsersInTransportation_paidById: one(aspNetUsersInTransportation, {
-      fields: [monthlyTransportSheetsInTransportation.paidById],
-      references: [aspNetUsersInTransportation.id],
-      relationName:
-        'monthlyTransportSheetsInTransportation_paidById_aspNetUsersInTransportation_id',
-    }),
-    aspNetUsersInTransportation_recipientId: one(aspNetUsersInTransportation, {
-      fields: [monthlyTransportSheetsInTransportation.recipientId],
-      references: [aspNetUsersInTransportation.id],
-      relationName:
-        'monthlyTransportSheetsInTransportation_recipientId_aspNetUsersInTransportation_id',
-    }),
-    crewsInTransportation: one(crewsInTransportation, {
-      fields: [monthlyTransportSheetsInTransportation.crewId],
-      references: [crewsInTransportation.id],
-    }),
-    monthlyTransportSheetDaysInTransportations: many(monthlyTransportSheetDaysInTransportation),
-  }),
-);
-
-export const routesInTransportationRelations = relations(routesInTransportation, ({ many }) => ({
-  crewsInTransportations: many(crewsInTransportation),
-}));
-
-export const tariffsInTransportationRelations = relations(tariffsInTransportation, ({ many }) => ({
-  crewsInTransportations: many(crewsInTransportation),
-}));
-
-export const monthlyTransportSheetDaysInTransportationRelations = relations(
-  monthlyTransportSheetDaysInTransportation,
-  ({ one }) => ({
-    monthlyTransportSheetsInTransportation: one(monthlyTransportSheetsInTransportation, {
-      fields: [monthlyTransportSheetDaysInTransportation.monthlyTransportSheetId],
-      references: [monthlyTransportSheetsInTransportation.id],
-    }),
-    transportDaysInTransportation: one(transportDaysInTransportation, {
-      fields: [monthlyTransportSheetDaysInTransportation.transportDayId],
-      references: [transportDaysInTransportation.id],
-    }),
-  }),
-);
-
-export const aspNetUserRolesInTransportationRelations = relations(
-  aspNetUserRolesInTransportation,
-  ({ one }) => ({
-    aspNetRolesInTransportation: one(aspNetRolesInTransportation, {
-      fields: [aspNetUserRolesInTransportation.roleId],
-      references: [aspNetRolesInTransportation.id],
-    }),
-    aspNetUsersInTransportation: one(aspNetUsersInTransportation, {
-      fields: [aspNetUserRolesInTransportation.userId],
-      references: [aspNetUsersInTransportation.id],
-    }),
-  }),
-);
-
-export const aspNetUserLoginsInTransportationRelations = relations(
-  aspNetUserLoginsInTransportation,
-  ({ one }) => ({
-    aspNetUsersInTransportation: one(aspNetUsersInTransportation, {
-      fields: [aspNetUserLoginsInTransportation.userId],
-      references: [aspNetUsersInTransportation.id],
-    }),
-  }),
-);
-
-export const aspNetUserTokensInTransportationRelations = relations(
-  aspNetUserTokensInTransportation,
-  ({ one }) => ({
-    aspNetUsersInTransportation: one(aspNetUsersInTransportation, {
-      fields: [aspNetUserTokensInTransportation.userId],
-      references: [aspNetUsersInTransportation.id],
+    transportDay: one(transportDays, {
+      fields: [monthlyTransportSheetDays.transportDayId],
+      references: [transportDays.id],
     }),
   }),
 );

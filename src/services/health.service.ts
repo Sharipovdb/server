@@ -1,13 +1,18 @@
 import process from 'node:process';
+import { isDatabaseReachable } from '../db/index.ts';
 
 export interface HealthStatus {
-  status: 'ok';
+  status: 'ok' | 'unavailable';
   uptime: number;
+  database: 'up' | 'down';
 }
 
-export function buildHealthStatus(): HealthStatus {
+export async function buildHealthStatus(): Promise<HealthStatus> {
+  const databaseReachable = await isDatabaseReachable();
+
   return {
-    status: 'ok',
+    status: databaseReachable ? 'ok' : 'unavailable',
     uptime: Number(process.uptime().toFixed(3)),
+    database: databaseReachable ? 'up' : 'down',
   };
 }

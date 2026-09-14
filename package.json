@@ -17,8 +17,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:pull": "drizzle-kit pull && node scripts/fix-pulled-schema.ts && prettier --write --log-level warn src/db/schema && prettier --write src/db/schema",
     "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
   },
   "keywords": [],

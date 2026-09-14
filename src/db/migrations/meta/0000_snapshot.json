@@ -1,0 +1,2250 @@
+{
+  "id": "e5ff2f71-4bd8-4667-a5cf-f5ce02cc7e6a",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "transportation.AspNetRoleClaims": {
+      "name": "AspNetRoleClaims",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "AspNetRoleClaims_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "RoleId": {
+          "name": "RoleId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ClaimType": {
+          "name": "ClaimType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ClaimValue": {
+          "name": "ClaimValue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "IX_AspNetRoleClaims_RoleId": {
+          "name": "IX_AspNetRoleClaims_RoleId",
+          "columns": [
+            {
+              "expression": "RoleId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "AspNetRoleClaims_RoleId_AspNetRoles_Id_fk": {
+          "name": "AspNetRoleClaims_RoleId_AspNetRoles_Id_fk",
+          "tableFrom": "AspNetRoleClaims",
+          "tableTo": "AspNetRoles",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "RoleId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.AspNetRoles": {
+      "name": "AspNetRoles",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "AspNetRoles_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "Name": {
+          "name": "Name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NormalizedName": {
+          "name": "NormalizedName",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ConcurrencyStamp": {
+          "name": "ConcurrencyStamp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "RoleNameIndex": {
+          "name": "RoleNameIndex",
+          "columns": [
+            {
+              "expression": "NormalizedName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.AspNetUserClaims": {
+      "name": "AspNetUserClaims",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "AspNetUserClaims_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "UserId": {
+          "name": "UserId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ClaimType": {
+          "name": "ClaimType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ClaimValue": {
+          "name": "ClaimValue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "IX_AspNetUserClaims_UserId": {
+          "name": "IX_AspNetUserClaims_UserId",
+          "columns": [
+            {
+              "expression": "UserId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "AspNetUserClaims_UserId_AspNetUsers_Id_fk": {
+          "name": "AspNetUserClaims_UserId_AspNetUsers_Id_fk",
+          "tableFrom": "AspNetUserClaims",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.AspNetUserLogins": {
+      "name": "AspNetUserLogins",
+      "schema": "transportation",
+      "columns": {
+        "LoginProvider": {
+          "name": "LoginProvider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ProviderKey": {
+          "name": "ProviderKey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ProviderDisplayName": {
+          "name": "ProviderDisplayName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "UserId": {
+          "name": "UserId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IX_AspNetUserLogins_UserId": {
+          "name": "IX_AspNetUserLogins_UserId",
+          "columns": [
+            {
+              "expression": "UserId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "AspNetUserLogins_UserId_AspNetUsers_Id_fk": {
+          "name": "AspNetUserLogins_UserId_AspNetUsers_Id_fk",
+          "tableFrom": "AspNetUserLogins",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "PK_AspNetUserLogins": {
+          "name": "PK_AspNetUserLogins",
+          "columns": [
+            "LoginProvider",
+            "ProviderKey"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.AspNetUserRoles": {
+      "name": "AspNetUserRoles",
+      "schema": "transportation",
+      "columns": {
+        "UserId": {
+          "name": "UserId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "RoleId": {
+          "name": "RoleId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IX_AspNetUserRoles_RoleId": {
+          "name": "IX_AspNetUserRoles_RoleId",
+          "columns": [
+            {
+              "expression": "RoleId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "AspNetUserRoles_UserId_AspNetUsers_Id_fk": {
+          "name": "AspNetUserRoles_UserId_AspNetUsers_Id_fk",
+          "tableFrom": "AspNetUserRoles",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "AspNetUserRoles_RoleId_AspNetRoles_Id_fk": {
+          "name": "AspNetUserRoles_RoleId_AspNetRoles_Id_fk",
+          "tableFrom": "AspNetUserRoles",
+          "tableTo": "AspNetRoles",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "RoleId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "PK_AspNetUserRoles": {
+          "name": "PK_AspNetUserRoles",
+          "columns": [
+            "UserId",
+            "RoleId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.AspNetUserTokens": {
+      "name": "AspNetUserTokens",
+      "schema": "transportation",
+      "columns": {
+        "UserId": {
+          "name": "UserId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "LoginProvider": {
+          "name": "LoginProvider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Name": {
+          "name": "Name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Value": {
+          "name": "Value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "AspNetUserTokens_UserId_AspNetUsers_Id_fk": {
+          "name": "AspNetUserTokens_UserId_AspNetUsers_Id_fk",
+          "tableFrom": "AspNetUserTokens",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "PK_AspNetUserTokens": {
+          "name": "PK_AspNetUserTokens",
+          "columns": [
+            "UserId",
+            "LoginProvider",
+            "Name"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.AspNetUsers": {
+      "name": "AspNetUsers",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "AspNetUsers_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "FirstName": {
+          "name": "FirstName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "LastName": {
+          "name": "LastName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "TelegramId": {
+          "name": "TelegramId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RefreshToken": {
+          "name": "RefreshToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "RefreshTokenExpiryTime": {
+          "name": "RefreshTokenExpiryTime",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "UserName": {
+          "name": "UserName",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NormalizedUserName": {
+          "name": "NormalizedUserName",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "Email": {
+          "name": "Email",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "NormalizedEmail": {
+          "name": "NormalizedEmail",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "EmailConfirmed": {
+          "name": "EmailConfirmed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "PasswordHash": {
+          "name": "PasswordHash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "SecurityStamp": {
+          "name": "SecurityStamp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ConcurrencyStamp": {
+          "name": "ConcurrencyStamp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PhoneNumber": {
+          "name": "PhoneNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PhoneNumberConfirmed": {
+          "name": "PhoneNumberConfirmed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "TwoFactorEnabled": {
+          "name": "TwoFactorEnabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "LockoutEnd": {
+          "name": "LockoutEnd",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "LockoutEnabled": {
+          "name": "LockoutEnabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "AccessFailedCount": {
+          "name": "AccessFailedCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "UserNameIndex": {
+          "name": "UserNameIndex",
+          "columns": [
+            {
+              "expression": "NormalizedUserName",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "EmailIndex": {
+          "name": "EmailIndex",
+          "columns": [
+            {
+              "expression": "NormalizedEmail",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.Routes": {
+      "name": "Routes",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "Routes_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "Name": {
+          "name": "Name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "DistanceKm": {
+          "name": "DistanceKm",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.tariffs": {
+      "name": "tariffs",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "tariffs_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "Name": {
+          "name": "Name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "AmountPerLeg": {
+          "name": "AmountPerLeg",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IX_tariffs_Name": {
+          "name": "IX_tariffs_Name",
+          "columns": [
+            {
+              "expression": "Name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"IsDeleted\" = false",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.vehicles": {
+      "name": "vehicles",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "vehicles_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "DriverId": {
+          "name": "DriverId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Plate": {
+          "name": "Plate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "SeatCount": {
+          "name": "SeatCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "AmortizationBasis": {
+          "name": "AmortizationBasis",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IX_vehicles_Plate": {
+          "name": "IX_vehicles_Plate",
+          "columns": [
+            {
+              "expression": "Plate",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"IsDeleted\" = false",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_vehicles_DriverId": {
+          "name": "IX_vehicles_DriverId",
+          "columns": [
+            {
+              "expression": "DriverId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "vehicles_DriverId_AspNetUsers_Id_fk": {
+          "name": "vehicles_DriverId_AspNetUsers_Id_fk",
+          "tableFrom": "vehicles",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "DriverId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.CrewMemberships": {
+      "name": "CrewMemberships",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "CrewMemberships_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "CrewId": {
+          "name": "CrewId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UserId": {
+          "name": "UserId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ActiveFrom": {
+          "name": "ActiveFrom",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ActiveTo": {
+          "name": "ActiveTo",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsActive": {
+          "name": "IsActive",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IX_CrewMemberships_CrewId": {
+          "name": "IX_CrewMemberships_CrewId",
+          "columns": [
+            {
+              "expression": "CrewId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_CrewMemberships_UserId": {
+          "name": "IX_CrewMemberships_UserId",
+          "columns": [
+            {
+              "expression": "UserId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "CrewMemberships_CrewId_Crews_Id_fk": {
+          "name": "CrewMemberships_CrewId_Crews_Id_fk",
+          "tableFrom": "CrewMemberships",
+          "tableTo": "Crews",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "CrewId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "CrewMemberships_UserId_AspNetUsers_Id_fk": {
+          "name": "CrewMemberships_UserId_AspNetUsers_Id_fk",
+          "tableFrom": "CrewMemberships",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.Crews": {
+      "name": "Crews",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "Crews_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "Name": {
+          "name": "Name",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "SeatCapacity": {
+          "name": "SeatCapacity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "RouteId": {
+          "name": "RouteId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "TariffId": {
+          "name": "TariffId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "CrewLeadId": {
+          "name": "CrewLeadId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "DriverLeadId": {
+          "name": "DriverLeadId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "IX_Crews_Name": {
+          "name": "IX_Crews_Name",
+          "columns": [
+            {
+              "expression": "Name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"IsDeleted\" = false",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_Crews_RouteId": {
+          "name": "IX_Crews_RouteId",
+          "columns": [
+            {
+              "expression": "RouteId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_Crews_TariffId": {
+          "name": "IX_Crews_TariffId",
+          "columns": [
+            {
+              "expression": "TariffId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_Crews_CrewLeadId": {
+          "name": "IX_Crews_CrewLeadId",
+          "columns": [
+            {
+              "expression": "CrewLeadId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_Crews_DriverLeadId": {
+          "name": "IX_Crews_DriverLeadId",
+          "columns": [
+            {
+              "expression": "DriverLeadId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "Crews_RouteId_Routes_Id_fk": {
+          "name": "Crews_RouteId_Routes_Id_fk",
+          "tableFrom": "Crews",
+          "tableTo": "Routes",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "RouteId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "Crews_TariffId_tariffs_Id_fk": {
+          "name": "Crews_TariffId_tariffs_Id_fk",
+          "tableFrom": "Crews",
+          "tableTo": "tariffs",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "TariffId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "Crews_CrewLeadId_AspNetUsers_Id_fk": {
+          "name": "Crews_CrewLeadId_AspNetUsers_Id_fk",
+          "tableFrom": "Crews",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "CrewLeadId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "Crews_DriverLeadId_AspNetUsers_Id_fk": {
+          "name": "Crews_DriverLeadId_AspNetUsers_Id_fk",
+          "tableFrom": "Crews",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "DriverLeadId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.absence_notices": {
+      "name": "absence_notices",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "absence_notices_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "UserId": {
+          "name": "UserId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Date": {
+          "name": "Date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Scope": {
+          "name": "Scope",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Type": {
+          "name": "Type",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Reason": {
+          "name": "Reason",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "IsNotified": {
+          "name": "IsNotified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {
+        "IX_absence_notices_UserId": {
+          "name": "IX_absence_notices_UserId",
+          "columns": [
+            {
+              "expression": "UserId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "absence_notices_UserId_AspNetUsers_Id_fk": {
+          "name": "absence_notices_UserId_AspNetUsers_Id_fk",
+          "tableFrom": "absence_notices",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "UserId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.TaxiExpense": {
+      "name": "TaxiExpense",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "TaxiExpense_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "TransportDayId": {
+          "name": "TransportDayId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Leg": {
+          "name": "Leg",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Amount": {
+          "name": "Amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "PaidById": {
+          "name": "PaidById",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "TaxiExpenseStatus": {
+          "name": "TaxiExpenseStatus",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IX_TaxiExpense_TransportDayId_Leg_PaidById": {
+          "name": "IX_TaxiExpense_TransportDayId_Leg_PaidById",
+          "columns": [
+            {
+              "expression": "TransportDayId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "Leg",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "PaidById",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"IsDeleted\" = false",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_TaxiExpense_TransportDayId": {
+          "name": "IX_TaxiExpense_TransportDayId",
+          "columns": [
+            {
+              "expression": "TransportDayId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_TaxiExpense_PaidById": {
+          "name": "IX_TaxiExpense_PaidById",
+          "columns": [
+            {
+              "expression": "PaidById",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "TaxiExpense_TransportDayId_transport_days_Id_fk": {
+          "name": "TaxiExpense_TransportDayId_transport_days_Id_fk",
+          "tableFrom": "TaxiExpense",
+          "tableTo": "transport_days",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "TransportDayId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "TaxiExpense_PaidById_AspNetUsers_Id_fk": {
+          "name": "TaxiExpense_PaidById_AspNetUsers_Id_fk",
+          "tableFrom": "TaxiExpense",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "PaidById"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.transport_days": {
+      "name": "transport_days",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "transport_days_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "CrewId": {
+          "name": "CrewId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Date": {
+          "name": "Date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "MorningMode": {
+          "name": "MorningMode",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "AfternoonMode": {
+          "name": "AfternoonMode",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "BaseRouteKm": {
+          "name": "BaseRouteKm",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ExtraCommuteKm": {
+          "name": "ExtraCommuteKm",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ExtraBusinessKm": {
+          "name": "ExtraBusinessKm",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "DriverId": {
+          "name": "DriverId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "LoggedBy": {
+          "name": "LoggedBy",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "LoggedAt": {
+          "name": "LoggedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Notes": {
+          "name": "Notes",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IX_transport_days_CrewId_Date": {
+          "name": "IX_transport_days_CrewId_Date",
+          "columns": [
+            {
+              "expression": "CrewId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "Date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"IsDeleted\" = false",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_transport_days_DriverId": {
+          "name": "IX_transport_days_DriverId",
+          "columns": [
+            {
+              "expression": "DriverId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_transport_days_LoggedBy": {
+          "name": "IX_transport_days_LoggedBy",
+          "columns": [
+            {
+              "expression": "LoggedBy",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "transport_days_CrewId_Crews_Id_fk": {
+          "name": "transport_days_CrewId_Crews_Id_fk",
+          "tableFrom": "transport_days",
+          "tableTo": "Crews",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "CrewId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "transport_days_DriverId_AspNetUsers_Id_fk": {
+          "name": "transport_days_DriverId_AspNetUsers_Id_fk",
+          "tableFrom": "transport_days",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "DriverId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transport_days_LoggedBy_AspNetUsers_Id_fk": {
+          "name": "transport_days_LoggedBy_AspNetUsers_Id_fk",
+          "tableFrom": "transport_days",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "LoggedBy"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.monthly_transport_sheet_days": {
+      "name": "monthly_transport_sheet_days",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "monthly_transport_sheet_days_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "MonthlyTransportSheetId": {
+          "name": "MonthlyTransportSheetId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "TransportDayId": {
+          "name": "TransportDayId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Date": {
+          "name": "Date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "DrivenLegCount": {
+          "name": "DrivenLegCount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "DrivenKm": {
+          "name": "DrivenKm",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ExtraBusinessKm": {
+          "name": "ExtraBusinessKm",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "TaxiAmount": {
+          "name": "TaxiAmount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "IX_monthly_transport_sheet_days_SheetId_TransportDayId": {
+          "name": "IX_monthly_transport_sheet_days_SheetId_TransportDayId",
+          "columns": [
+            {
+              "expression": "MonthlyTransportSheetId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "TransportDayId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_monthly_transport_sheet_days_TransportDayId": {
+          "name": "IX_monthly_transport_sheet_days_TransportDayId",
+          "columns": [
+            {
+              "expression": "TransportDayId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "monthly_transport_sheet_days_MonthlyTransportSheetId_monthly_transport_sheets_Id_fk": {
+          "name": "monthly_transport_sheet_days_MonthlyTransportSheetId_monthly_transport_sheets_Id_fk",
+          "tableFrom": "monthly_transport_sheet_days",
+          "tableTo": "monthly_transport_sheets",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "MonthlyTransportSheetId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "monthly_transport_sheet_days_TransportDayId_transport_days_Id_fk": {
+          "name": "monthly_transport_sheet_days_TransportDayId_transport_days_Id_fk",
+          "tableFrom": "monthly_transport_sheet_days",
+          "tableTo": "transport_days",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "TransportDayId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.monthly_transport_sheets": {
+      "name": "monthly_transport_sheets",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "monthly_transport_sheets_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "CrewId": {
+          "name": "CrewId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Year": {
+          "name": "Year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "Month": {
+          "name": "Month",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "PeriodStart": {
+          "name": "PeriodStart",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "PeriodEnd": {
+          "name": "PeriodEnd",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "RecipientId": {
+          "name": "RecipientId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "KmRate": {
+          "name": "KmRate",
+          "type": "numeric(18, 4)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "TariffPerLeg": {
+          "name": "TariffPerLeg",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "AmortizationAmount": {
+          "name": "AmortizationAmount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "CreatedById": {
+          "name": "CreatedById",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "IsConfirmed": {
+          "name": "IsConfirmed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "ConfirmedById": {
+          "name": "ConfirmedById",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ConfirmedAt": {
+          "name": "ConfirmedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsPaid": {
+          "name": "IsPaid",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "PaidById": {
+          "name": "PaidById",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "PaidAt": {
+          "name": "PaidAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "IX_monthly_transport_sheets_CrewId_Year_Month": {
+          "name": "IX_monthly_transport_sheets_CrewId_Year_Month",
+          "columns": [
+            {
+              "expression": "CrewId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "Year",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "Month",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"IsDeleted\" = false",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_monthly_transport_sheets_RecipientId": {
+          "name": "IX_monthly_transport_sheets_RecipientId",
+          "columns": [
+            {
+              "expression": "RecipientId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_monthly_transport_sheets_CreatedById": {
+          "name": "IX_monthly_transport_sheets_CreatedById",
+          "columns": [
+            {
+              "expression": "CreatedById",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "IX_monthly_transport_sheets_PaidById": {
+          "name": "IX_monthly_transport_sheets_PaidById",
+          "columns": [
+            {
+              "expression": "PaidById",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "monthly_transport_sheets_CrewId_Crews_Id_fk": {
+          "name": "monthly_transport_sheets_CrewId_Crews_Id_fk",
+          "tableFrom": "monthly_transport_sheets",
+          "tableTo": "Crews",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "CrewId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "monthly_transport_sheets_RecipientId_AspNetUsers_Id_fk": {
+          "name": "monthly_transport_sheets_RecipientId_AspNetUsers_Id_fk",
+          "tableFrom": "monthly_transport_sheets",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "RecipientId"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "monthly_transport_sheets_CreatedById_AspNetUsers_Id_fk": {
+          "name": "monthly_transport_sheets_CreatedById_AspNetUsers_Id_fk",
+          "tableFrom": "monthly_transport_sheets",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "CreatedById"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "monthly_transport_sheets_PaidById_AspNetUsers_Id_fk": {
+          "name": "monthly_transport_sheets_PaidById_AspNetUsers_Id_fk",
+          "tableFrom": "monthly_transport_sheets",
+          "tableTo": "AspNetUsers",
+          "schemaTo": "transportation",
+          "columnsFrom": [
+            "PaidById"
+          ],
+          "columnsTo": [
+            "Id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "transportation.TransportSettings": {
+      "name": "TransportSettings",
+      "schema": "transportation",
+      "columns": {
+        "Id": {
+          "name": "Id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "TransportSettings_Id_seq",
+            "schema": "transportation",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "CreatedAt": {
+          "name": "CreatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "UpdatedAt": {
+          "name": "UpdatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "IsDeleted": {
+          "name": "IsDeleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "CommuteKmRate": {
+          "name": "CommuteKmRate",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ExtraBusinessKmRate": {
+          "name": "ExtraBusinessKmRate",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "EffectiveFrom": {
+          "name": "EffectiveFrom",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {
+    "transportation": "transportation"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
