@@ -31,7 +31,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.js', 'drizzle.config.ts'],
+    files: ['**/*.js', 'drizzle.config.ts', 'vitest.config.ts'],
     ...tseslint.configs.disableTypeChecked,
   },
   prettier,

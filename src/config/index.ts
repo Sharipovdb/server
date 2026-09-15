@@ -9,29 +9,56 @@ export class ConfigError extends Error {
 
 export type NodeEnv = 'development' | 'production' | 'test';
 
+export interface JwtSettings {
+  readonly secret: string;
+  readonly issuer: string;
+  readonly audience: string;
+  readonly accessTokenLifetimeMinutes: number;
+  readonly refreshTokenLifetimeDays: number;
+}
+
 export interface AppConfig {
   readonly nodeEnv: NodeEnv;
   readonly port: number;
   readonly databaseUrl: string;
+  readonly jwt: JwtSettings;
   readonly isProduction: boolean;
   readonly isDevelopment: boolean;
 }
 
-const REQUIRED_ENV_VARS = ['NODE_ENV', 'PORT', 'DATABASE_URL'] as const;
+export interface SeedConfig {
+  readonly admin: {
+    readonly userName: string;
+    readonly password: string;
+  };
+}
+
+const APP_ENV_VARS = [
+  'NODE_ENV',
+  'PORT',
+  'DATABASE_URL',
+  'JWT_SECRET',
+  'JWT_ISSUER',
+  'JWT_AUDIENCE',
+  'JWT_ACCESS_TOKEN_LIFETIME_MINUTES',
+  'JWT_REFRESH_TOKEN_LIFETIME_DAYS',
+] as const;
+
+const SEED_ENV_VARS = ['SEED_ADMIN_USERNAME', 'SEED_ADMIN_PASSWORD'] as const;
 
 const DATABASE_URL_PROTOCOLS = ['postgres:', 'postgresql:'];
 
-type RequiredEnvVar = (typeof REQUIRED_ENV_VARS)[number];
-
 const NODE_ENV_VALUES: readonly NodeEnv[] = ['development', 'production', 'test'];
+
+const JWT_SECRET_MIN_LENGTH = 32;
 
 let cached: AppConfig | null = null;
 
-function readRequiredEnv(): Record<RequiredEnvVar, string> {
-  const values = {} as Record<RequiredEnvVar, string>;
+function readRequiredEnv<TName extends string>(names: readonly TName[]): Record<TName, string> {
+  const values = {} as Record<TName, string>;
   const missing: string[] = [];
 
-  for (const name of REQUIRED_ENV_VARS) {
+  for (const name of names) {
     const raw = process.env[name];
 
     if (raw === undefined || raw.trim() === '') {
@@ -94,14 +121,47 @@ function parseDatabaseUrl(raw: string): string {
   return raw;
 }
 
+function parseJwtSecret(raw: string): string {
+  if (raw.length < JWT_SECRET_MIN_LENGTH) {
+    throw new ConfigError(
+      `JWT_SECRET is too short. Use at least ${JWT_SECRET_MIN_LENGTH} characters.`,
+    );
+  }
+
+  return raw;
+}
+
+function parsePositiveInteger(name: string, raw: string): number {
+  const value = Number(raw);
+
+  if (!Number.isInteger(value) || value < 1) {
+    throw new ConfigError(`Invalid ${name} value "${raw}". Expected a positive integer.`);
+  }
+
+  return value;
+}
+
 function buildConfig(): AppConfig {
-  const env = readRequiredEnv();
+  const env = readRequiredEnv(APP_ENV_VARS);
   const nodeEnv = parseNodeEnv(env.NODE_ENV);
 
   return Object.freeze({
     nodeEnv,
     port: parsePort(env.PORT),
     databaseUrl: parseDatabaseUrl(env.DATABASE_URL),
+    jwt: Object.freeze({
+      secret: parseJwtSecret(env.JWT_SECRET),
+      issuer: env.JWT_ISSUER,
+      audience: env.JWT_AUDIENCE,
+      accessTokenLifetimeMinutes: parsePositiveInteger(
+        'JWT_ACCESS_TOKEN_LIFETIME_MINUTES',
+        env.JWT_ACCESS_TOKEN_LIFETIME_MINUTES,
+      ),
+      refreshTokenLifetimeDays: parsePositiveInteger(
+        'JWT_REFRESH_TOKEN_LIFETIME_DAYS',
+        env.JWT_REFRESH_TOKEN_LIFETIME_DAYS,
+      ),
+    }),
     isProduction: nodeEnv === 'production',
     isDevelopment: nodeEnv === 'development',
   });
@@ -110,6 +170,17 @@ function buildConfig(): AppConfig {
 export function getConfig(): AppConfig {
   cached ??= buildConfig();
   return cached;
+}
+
+export function getSeedConfig(): SeedConfig {
+  const env = readRequiredEnv(SEED_ENV_VARS);
+
+  return Object.freeze({
+    admin: Object.freeze({
+      userName: env.SEED_ADMIN_USERNAME,
+      password: env.SEED_ADMIN_PASSWORD,
+    }),
+  });
 }
 
 export function resetConfigCache(): void {
