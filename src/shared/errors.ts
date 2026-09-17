@@ -6,3 +6,21 @@ export class BadRequestError extends Error {
     this.name = 'BadRequestError';
   }
 }
+
+export class UnauthorizedError extends Error {
+  readonly status = 401;
+
+  constructor(message = 'Authentication required') {
+    super(message);
+    this.name = 'UnauthorizedError';
+  }
+}
+
+export class ForbiddenError extends Error {
+  readonly status = 403;
+
+  constructor(message = 'Access denied') {
+    super(message);
+    this.name = 'ForbiddenError';
+  }
+}

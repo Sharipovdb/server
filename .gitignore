@@ -30,3 +30,5 @@ Thumbs.db
 
 .eslintcache
 *.tsbuildinfo
+
+bruno/environments/

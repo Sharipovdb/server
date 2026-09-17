@@ -173,6 +173,11 @@ state. It refuses to touch a database whose name does not end in `_test`.
 
 ## API
 
+Endpoint paths are copied from the C# service letter for letter, capitals and method name included
+(`/api/Auth/login`, and later `/api/Crew/GetAll`), so the existing frontend keeps working unchanged.
+Express matches routes case-insensitively, exactly as ASP.NET does, so `/api/auth/login` reaches the
+same handler.
+
 ### `GET /health`
 
 Smoke-test endpoint. Runs `select 1` against the database and returns `200` with the uptime in
@@ -246,6 +251,33 @@ A body without the required fields returns `400` in the shared error shape.
   token at a time: a new login replaces it.
 - Passwords are stored as bcrypt hashes.
 
+### Protecting endpoints
+
+`currentUser` runs for every request from `app.ts`. When the request carries a valid
+`Authorization: Bearer <token>` header it puts the user on `req.user`; a missing, broken or expired
+token leaves the request anonymous instead of failing it. Two guards then enforce access, mirroring
+`[Authorize]` and `[RoleAuthorize(...)]` in the C# service:
+
+```ts
+import { requireAuth, requireRole } from '../middleware/auth.middleware.ts';
+import { RoleName } from '../shared/role-names.ts';
+
+tariffRouter.use(requireAuth);
+tariffRouter.get('/GetAll', requireRole(RoleName.Admin, RoleName.Accountant), getAllTariffs);
+```
+
+| Situation                                                        | Answer       |
+| ---------------------------------------------------------------- | ------------ |
+| No token, broken signature, expired token, wrong issuer/audience | `401`        |
+| Valid token, but none of the listed roles                        | `403`        |
+| Valid token with at least one of the listed roles                | handler runs |
+
+`req.user` holds `{ id, userName, roles }` read from the token claims (`nameid`, `unique_name`,
+`role`). There is no database query per request, exactly like `CurrentUserMiddleware` in C#, so a
+role granted in the database reaches the API only after the user logs in again. Role names are
+compared without case sensitivity, and `requireRole` answers `401` — not `403` — when there is no
+user at all, the way ASP.NET does.
+
 ## Project structure
 
 ```
@@ -256,11 +288,12 @@ src/
   routes/         Route definitions, mounted from app.ts
   controllers/    Request and response handling
   services/       Business logic, free of Express types
-  middleware/     404 handler and the centralized error handler
+  middleware/     Auth guards, 404 handler and the centralized error handler
   validation/     Request body parsing that rejects missing fields with 400
   dtos/           Request and response shapes shared by controllers and services
   repositories/   Data access for tables without soft delete, such as ASP.NET Identity users
   shared/         ApiResponse, errors, role names and name normalization
+  types/          Type augmentation that puts the authenticated user on req.user
   db/             Shared Drizzle client, soft-delete helpers, schema, migrations, seeders, enums
   test/           Global test setup and helpers for integration tests
 ```

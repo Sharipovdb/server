@@ -11,3 +11,9 @@ export interface TokenResponse {
   readonly accessToken: string;
   readonly refreshToken: string;
 }
+
+export interface AuthenticatedUser {
+  readonly id: number;
+  readonly userName: string;
+  readonly roles: readonly string[];
+}

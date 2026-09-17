@@ -1,8 +1,13 @@
 import jwt from 'jsonwebtoken';
-import type { JwtPayload } from 'jsonwebtoken';
+import type { JwtPayload, SignOptions } from 'jsonwebtoken';
 import { describe, expect, it } from 'vitest';
 import type { JwtSettings } from '../config/index.ts';
-import { createAccessToken, createRefreshToken, hashRefreshToken } from './token.service.ts';
+import {
+  createAccessToken,
+  createRefreshToken,
+  hashRefreshToken,
+  readAccessToken,
+} from './token.service.ts';
 
 const SETTINGS: JwtSettings = {
   secret: 's'.repeat(32),
@@ -80,5 +85,77 @@ describe('hashRefreshToken', () => {
     expect(hashRefreshToken('abc')).toBe(
       'BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD',
     );
+  });
+});
+
+describe('readAccessToken', () => {
+  const CREW_LEAD = {
+    id: 7,
+    userName: 'crew.lead',
+    email: null,
+    phoneNumber: null,
+    telegramId: null,
+    roles: ['CrewLead'],
+  };
+
+  function signRaw(payload: Record<string, unknown>, options: SignOptions = {}): string {
+    return jwt.sign(payload, SETTINGS.secret, {
+      issuer: SETTINGS.issuer,
+      audience: SETTINGS.audience,
+      expiresIn: 60,
+      ...options,
+    });
+  }
+
+  it('reads the user out of a token issued by createAccessToken', () => {
+    expect(readAccessToken(createAccessToken(CREW_LEAD, SETTINGS), SETTINGS)).toEqual({
+      id: 7,
+      userName: 'crew.lead',
+      roles: ['CrewLead'],
+    });
+  });
+
+  it('rejects a token signed with another secret', () => {
+    const token = createAccessToken(CREW_LEAD, { ...SETTINGS, secret: 'o'.repeat(32) });
+
+    expect(readAccessToken(token, SETTINGS)).toBeUndefined();
+  });
+
+  it('rejects a token issued for another audience', () => {
+    const token = createAccessToken(CREW_LEAD, { ...SETTINGS, audience: 'other-client' });
+
+    expect(readAccessToken(token, SETTINGS)).toBeUndefined();
+  });
+
+  it('rejects a token from another issuer', () => {
+    const token = createAccessToken(CREW_LEAD, { ...SETTINGS, issuer: 'other-backend' });
+
+    expect(readAccessToken(token, SETTINGS)).toBeUndefined();
+  });
+
+  it('rejects an expired token', () => {
+    const token = signRaw({ nameid: '7', role: ['CrewLead'] }, { expiresIn: -60 });
+
+    expect(readAccessToken(token, SETTINGS)).toBeUndefined();
+  });
+
+  it('rejects a string that is not a token', () => {
+    expect(readAccessToken('not-a-token', SETTINGS)).toBeUndefined();
+  });
+
+  it('rejects a token without a user id', () => {
+    expect(readAccessToken(signRaw({ unique_name: 'ghost' }), SETTINGS)).toBeUndefined();
+  });
+
+  it('accepts a single role written as a string, the way C# writes it', () => {
+    const token = signRaw({ nameid: '7', unique_name: 'admin', role: 'Admin' });
+
+    expect(readAccessToken(token, SETTINGS)?.roles).toEqual(['Admin']);
+  });
+
+  it('reports an empty role list when the claim is missing', () => {
+    const token = signRaw({ nameid: '7', unique_name: 'admin' });
+
+    expect(readAccessToken(token, SETTINGS)?.roles).toEqual([]);
   });
 });
