@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import type { JwtSettings } from '../config/index.ts';
+import type { AuthenticatedUser } from '../dtos/auth.dto.ts';
 
 const REFRESH_TOKEN_BYTES = 64;
 const SECONDS_PER_MINUTE = 60;
@@ -43,4 +44,50 @@ export function createRefreshToken(): string {
 
 export function hashRefreshToken(refreshToken: string): string {
   return createHash('sha256').update(refreshToken, 'utf8').digest('hex').toUpperCase();
+}
+
+function readRoles(claim: unknown): string[] {
+  if (typeof claim === 'string') {
+    return [claim];
+  }
+
+  if (Array.isArray(claim)) {
+    return claim.filter((role): role is string => typeof role === 'string');
+  }
+
+  return [];
+}
+
+export function readAccessToken(
+  token: string,
+  settings: JwtSettings,
+): AuthenticatedUser | undefined {
+  let payload: unknown;
+
+  try {
+    payload = jwt.verify(token, settings.secret, {
+      algorithms: ['HS256'],
+      issuer: settings.issuer,
+      audience: settings.audience,
+    });
+  } catch {
+    return undefined;
+  }
+
+  if (typeof payload !== 'object' || payload === null) {
+    return undefined;
+  }
+
+  const claims = payload as Record<string, unknown>;
+  const id = Number(claims.nameid ?? claims.sub);
+
+  if (!Number.isInteger(id) || id < 1) {
+    return undefined;
+  }
+
+  return {
+    id,
+    userName: typeof claims.unique_name === 'string' ? claims.unique_name : '',
+    roles: readRoles(claims.role),
+  };
 }
