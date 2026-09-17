@@ -2,9 +2,9 @@
 
 Express + TypeScript backend for the CrewMove transportation service.
 
-This is the baseline scaffold: application structure, configuration, error handling, a health
-endpoint and a PostgreSQL database built from a Drizzle schema. Authentication and domain endpoints
-land in follow-up tasks.
+The service has application structure, configuration, error handling, a health endpoint, a
+PostgreSQL database built from a Drizzle schema, and login with JWT access and refresh tokens. Domain
+endpoints land in follow-up tasks.
 
 ## Prerequisites
 
@@ -21,20 +21,30 @@ npm install
 cp .env.example .env
 createdb -U postgres crewmove_node
 npm run db:migrate
+npm run db:seed
 ```
 
 `.env` is git-ignored. `.env.example` lists every variable the application requires; copy it and
 adjust the values. The app refuses to start and prints the missing variable names if any are absent.
 
-The database starts empty: `db:migrate` creates the `transportation` schema and every table.
+The database starts empty: `db:migrate` creates the `transportation` schema and every table, and
+`db:seed` adds the six roles and the administrator from `SEED_ADMIN_USERNAME` and
+`SEED_ADMIN_PASSWORD`. Running the seeder again creates nothing new.
 
 ## Environment variables
 
-| Variable       | Required | Example                                                       | Description                                  |
-| -------------- | -------- | ------------------------------------------------------------- | -------------------------------------------- |
-| `NODE_ENV`     | yes      | `development`                                                 | One of `development`, `production`, `test`.  |
-| `PORT`         | yes      | `3000`                                                        | TCP port the HTTP server binds to (1–65535). |
-| `DATABASE_URL` | yes      | `postgresql://postgres:postgres@localhost:5432/crewmove_node` | PostgreSQL connection string.                |
+| Variable                            | Required    | Example                                                       | Description                                                  |
+| ----------------------------------- | ----------- | ------------------------------------------------------------- | ------------------------------------------------------------ |
+| `NODE_ENV`                          | yes         | `development`                                                 | One of `development`, `production`, `test`.                  |
+| `PORT`                              | yes         | `3000`                                                        | TCP port the HTTP server binds to (1–65535).                 |
+| `DATABASE_URL`                      | yes         | `postgresql://postgres:postgres@localhost:5432/crewmove_node` | PostgreSQL connection string.                                |
+| `JWT_SECRET`                        | yes         | a random string                                               | HS256 signing key for access tokens, at least 32 characters. |
+| `JWT_ISSUER`                        | yes         | `TransportationBackend`                                       | `iss` claim of access tokens.                                |
+| `JWT_AUDIENCE`                      | yes         | `TransportationClient`                                        | `aud` claim of access tokens.                                |
+| `JWT_ACCESS_TOKEN_LIFETIME_MINUTES` | yes         | `15`                                                          | Access token lifetime in minutes.                            |
+| `JWT_REFRESH_TOKEN_LIFETIME_DAYS`   | yes         | `7`                                                           | Refresh token lifetime in days.                              |
+| `SEED_ADMIN_USERNAME`               | seeder only | `admin`                                                       | Administrator created by `npm run db:seed`.                  |
+| `SEED_ADMIN_PASSWORD`               | seeder only | `change-me`                                                   | Password of that administrator, stored as a bcrypt hash.     |
 
 ## Running
 
@@ -54,28 +64,27 @@ npm run build
 npm start
 ```
 
-`npm run build` compiles `src/` to `dist/` with `tsc`. `npm start` runs `dist/server.js` and does
-**not** read `.env` — supply `NODE_ENV`, `PORT` and `DATABASE_URL` through the real environment
-(Docker, Railway, systemd, etc.):
-
-```bash
-NODE_ENV=production PORT=8080 DATABASE_URL=postgresql://user:password@host:5432/db npm start
-```
+`npm run build` compiles `src/` to `dist/` with `tsconfig.build.json`, which leaves the tests out.
+`npm start` runs `dist/server.js` and does **not** read `.env` — supply every required variable from
+the table above through the real environment (Docker, Railway, systemd, etc.).
 
 ## Scripts
 
 | Script                 | Description                                                       |
 | ---------------------- | ----------------------------------------------------------------- |
 | `npm run dev`          | Start with watch mode and `.env` loading.                         |
-| `npm run build`        | Compile TypeScript to `dist/`.                                    |
+| `npm run build`        | Compile TypeScript to `dist/`, tests excluded.                    |
 | `npm start`            | Run the compiled build.                                           |
 | `npm run typecheck`    | Type-check without emitting files.                                |
+| `npm test`             | Run the test suite once against the test database.                |
+| `npm run test:watch`   | Run the tests in watch mode.                                      |
 | `npm run lint`         | Run ESLint.                                                       |
 | `npm run lint:fix`     | Run ESLint and apply fixable rules.                               |
 | `npm run format`       | Format the repository with Prettier.                              |
 | `npm run format:check` | Verify formatting without writing.                                |
 | `npm run db:generate`  | Write a SQL migration for schema changes to `src/db/migrations/`. |
 | `npm run db:migrate`   | Apply pending migrations to the database in `DATABASE_URL`.       |
+| `npm run db:seed`      | Create the roles and the administrator; safe to run again.        |
 | `npm run db:studio`    | Open Drizzle Studio.                                              |
 
 ## Database
@@ -147,6 +156,21 @@ answers "No schema changes".
 **Never run `drizzle-kit push`.** It forces the database to match the schema file and silently drops
 everything the file does not describe.
 
+## Testing
+
+Tests use Vitest and supertest and live next to the code as `*.test.ts`. They run against a separate
+database:
+
+```bash
+createdb -U postgres crewmove_node_test
+cp .env.test.example .env.test
+npm test
+```
+
+`.env.test` is git-ignored. Before every run `src/test/global-setup.ts` drops the `transportation`
+and `drizzle` schemas, applies the migrations and runs the seeder, so each run starts from a known
+state. It refuses to touch a database whose name does not end in `_test`.
+
 ## API
 
 ### `GET /health`
@@ -174,6 +198,54 @@ Unmatched routes return `404` in the shared error shape:
 { "error": { "status": 404, "message": "Route GET /nope not found" } }
 ```
 
+### `POST /api/Auth/login`
+
+```json
+{ "userName": "admin", "password": "change-me" }
+```
+
+The username is case-insensitive. A successful login returns:
+
+```json
+{
+  "isSuccess": true,
+  "statusCode": 200,
+  "message": "Logged in successfully",
+  "data": { "accessToken": "eyJhbGciOiJIUzI1NiIs...", "refreshToken": "q3JkZl8x..." }
+}
+```
+
+### `POST /api/Auth/refresh`
+
+```json
+{ "refreshToken": "q3JkZl8x..." }
+```
+
+Returns a new pair in the same shape with `"message": null`. The old refresh token stops working.
+
+Both endpoints follow the C# service: a failed login or refresh still answers HTTP `200`, and the
+failure is in the body.
+
+```json
+{ "isSuccess": false, "statusCode": 400, "message": "Wrong username or password!", "data": null }
+```
+
+| Case                                  | `message`                     |
+| ------------------------------------- | ----------------------------- |
+| Wrong password or unknown user        | `Wrong username or password!` |
+| Refresh token unknown or already used | `Invalid refresh token`       |
+| Refresh token past its expiry         | `Refresh token expired`       |
+
+A body without the required fields returns `400` in the shared error shape.
+
+- The access token is HS256, signed with `JWT_SECRET`, with `iss`, `aud` and lifetime from `.env`.
+  Claims: `sub` and `nameid` (user id), `unique_name`, `email`, `phone_number`, `telegramId` and
+  `role`, an array of role names.
+- The refresh token is 64 random bytes in Base64. Only its SHA-256 hash is stored in
+  `AspNetUsers.RefreshToken`, with the expiry in `RefreshTokenExpiryTime`. A user holds one refresh
+  token at a time: a new login replaces it.
+- Passwords are stored as bcrypt hashes.
+
 ## Project structure
 
 ```
@@ -185,7 +257,12 @@ src/
   controllers/    Request and response handling
   services/       Business logic, free of Express types
   middleware/     404 handler and the centralized error handler
-  db/             Shared Drizzle client, soft-delete helpers, schema, migrations, enum values
+  validation/     Request body parsing that rejects missing fields with 400
+  dtos/           Request and response shapes shared by controllers and services
+  repositories/   Data access for tables without soft delete, such as ASP.NET Identity users
+  shared/         ApiResponse, errors, role names and name normalization
+  db/             Shared Drizzle client, soft-delete helpers, schema, migrations, seeders, enums
+  test/           Global test setup and helpers for integration tests
 ```
 
 Two conventions matter for everything built on top of this scaffold:
