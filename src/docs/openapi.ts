@@ -18,12 +18,27 @@ const tokenResponseSchema = {
   required: ['accessToken', 'refreshToken'],
 };
 
+const routeResponseSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'integer' },
+    name: { type: 'string' },
+    distanceKm: { type: 'number' },
+  },
+  required: ['id', 'name', 'distanceKm'],
+};
+
 export const openApiSpec = {
   openapi: '3.0.3',
   info: {
     title: 'CrewMove API',
     version: '0.1.0',
     description: 'Node.js/Express переписывание CrewMove backend с C#/.NET',
+  },
+  components: {
+    securitySchemes: {
+      bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+    },
   },
   paths: {
     '/health': {
@@ -111,6 +126,108 @@ export const openApiSpec = {
               },
             },
           },
+        },
+      },
+    },
+    '/api/Route/Add': {
+      post: {
+        summary: 'Создать маршрут',
+        tags: ['Route'],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: { name: { type: 'string' }, distanceKm: { type: 'number' } },
+                required: ['name', 'distanceKm'],
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Маршрут создан',
+            content: { 'application/json': { schema: apiResponseSchema(routeResponseSchema) } },
+          },
+          '400': { description: 'Невалидное тело запроса' },
+          '401': { description: 'Нет токена' },
+          '403': { description: 'Недостаточно прав' },
+        },
+      },
+    },
+    '/api/Route/GetById/{id}': {
+      get: {
+        summary: 'Получить маршрут по id',
+        tags: ['Route'],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        responses: {
+          '200': {
+            description: 'Найден',
+            content: { 'application/json': { schema: apiResponseSchema(routeResponseSchema) } },
+          },
+          '404': { description: 'Не найден' },
+        },
+      },
+    },
+    '/api/Route/GetAll': {
+      get: {
+        summary: 'Список всех маршрутов',
+        tags: ['Route'],
+        security: [{ bearerAuth: [] }],
+        responses: {
+          '200': {
+            description: 'Список маршрутов',
+            content: {
+              'application/json': {
+                schema: apiResponseSchema({ type: 'array', items: routeResponseSchema }),
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/Route/Update': {
+      put: {
+        summary: 'Обновить маршрут',
+        tags: ['Route'],
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' },
+                  name: { type: 'string' },
+                  distanceKm: { type: 'number' },
+                },
+                required: ['id', 'name', 'distanceKm'],
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Обновлён',
+            content: { 'application/json': { schema: apiResponseSchema(routeResponseSchema) } },
+          },
+          '404': { description: 'Не найден' },
+        },
+      },
+    },
+    '/api/Route/Delete/{id}': {
+      delete: {
+        summary: 'Удалить маршрут (soft delete)',
+        tags: ['Route'],
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        responses: {
+          '200': { description: 'Удалён' },
+          '404': { description: 'Не найден' },
         },
       },
     },
