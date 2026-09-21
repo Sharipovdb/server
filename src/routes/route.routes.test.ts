@@ -109,15 +109,45 @@ describe('GET /api/Route/GetById/:id', () => {
 });
 
 describe('GET /api/Route/GetAll', () => {
+  it('rejects a request without a token with 401', async () => {
+    const response = await authed(
+      'get',
+      `${GET_ALL_PATH}?PaginationInfo.Index=0&PaginationInfo.Size=1`,
+    );
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects a request without pagination params with 400', async () => {
+    const response = await authed('get', GET_ALL_PATH, WORKER_TOKEN);
+    expect(response.status).toBe(400);
+  });
+
   it('includes a previously created route', async () => {
     const created = await createTestRoute();
 
-    const response = await authed('get', GET_ALL_PATH, WORKER_TOKEN);
+    const response = await authed(
+      'get',
+      `${GET_ALL_PATH}?PaginationInfo.Index=0&PaginationInfo.Size=50`,
+      WORKER_TOKEN,
+    );
 
     expect(response.status).toBe(200);
-    expect(response.body.data).toEqual(
+    expect(response.body.data.items).toEqual(
       expect.arrayContaining([expect.objectContaining({ id: created.data!.id })]),
     );
+  });
+
+  it('returns totalCount reflecting the number of items on the page', async () => {
+    await createTestRoute();
+
+    const response = await authed(
+      'get',
+      `${GET_ALL_PATH}?PaginationInfo.Index=0&PaginationInfo.Size=1`,
+      WORKER_TOKEN,
+    );
+
+    expect(response.body.data.items).toHaveLength(1);
+    expect(response.body.data.totalCount).toEqual(expect.any(Number));
   });
 });
 

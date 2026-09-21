@@ -8,6 +8,7 @@ import {
 } from '../services/route.service.ts';
 import type { RequestWithBody } from '../shared/http.ts';
 import type { CreateRoute, UpdateRoute } from '../validation/route.validation.ts';
+import type { Pagination } from '../validation/pagination.ts';
 
 const HTTP_OK = 200;
 
@@ -24,8 +25,8 @@ export async function getRoute(req: Request, res: Response): Promise<void> {
   res.status(HTTP_OK).json(response);
 }
 
-export async function getRoutes(_req: Request, res: Response): Promise<void> {
-  const response = await getAllRoutes();
+export async function getRoutes(req: Request, res: Response): Promise<void> {
+  const response = await getAllRoutes(req.validatedQuery as Pagination);
   res.status(HTTP_OK).json(response);
 }
 

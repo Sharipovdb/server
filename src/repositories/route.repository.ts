@@ -1,14 +1,11 @@
 import type { Executor } from '../db/client.ts';
 import { db } from '../db/client.ts';
 import { routes } from '../db/schema/routes.ts';
-import {
-  findNotDeletedById,
-  notDeleted,
-  selectNotDeleted,
-  softDeleteById,
-} from '../db/soft-delete.ts';
+import { findNotDeletedById, notDeleted, softDeleteById } from '../db/soft-delete.ts';
+import type { PaginatedResult } from '../shared/paginated-result.ts';
+import type { Pagination } from '../validation/pagination.ts';
 import type { CreateRoute, UpdateRoute } from '../validation/route.validation.ts';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, count } from 'drizzle-orm';
 
 export interface RouteSummary {
   readonly id: number;
@@ -41,9 +38,23 @@ export async function insertRoute(
   return created;
 }
 
-export async function findAllRoutes(executor: Executor = db): Promise<RouteSummary[]> {
-  const rows = await selectNotDeleted(routes, undefined, executor);
-  return rows.map(toSummary);
+export async function findAllRoutes(
+  { index, size }: Pagination,
+  executor: Executor = db,
+): Promise<PaginatedResult<RouteSummary>> {
+  const [rows, countRows] = await Promise.all([
+    executor
+      .select(ROUTE_SUMMARY_COLUMNS)
+      .from(routes)
+      .where(notDeleted(routes))
+      .limit(size)
+      .offset(index * size),
+    executor.select({ totalCount: count() }).from(routes).where(notDeleted(routes)),
+  ]);
+
+  const totalCount = countRows[0]?.totalCount ?? 0;
+
+  return { items: rows.map(toSummary), totalCount };
 }
 
 export async function findRouteById(

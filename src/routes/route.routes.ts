@@ -7,11 +7,13 @@ import {
   putUpdateRoute,
 } from '../controllers/route.controller.ts';
 import { validateBody } from '../validation/validate-body.ts';
-import { idParamsSchema } from '../validation/common.validation.ts';
+import { idParamsSchema } from '../validation/id.ts';
 import { createRouteSchema, updateRouteSchema } from '../validation/route.validation.ts';
 import { requireAuth, requireRole } from '../middleware/auth.middleware.ts';
 import { RoleName } from '../shared/role-names.ts';
 import { validateParams } from '../validation/validate-params.ts';
+import { validateQuery } from '../validation/validate-query.ts';
+import { paginationQuerySchema } from '../validation/pagination.ts';
 
 export const routeRouter: Router = Router();
 
@@ -20,6 +22,7 @@ routeRouter.use(requireAuth);
 routeRouter.get(
   '/GetAll',
   requireRole(RoleName.Admin, RoleName.RouteManager, RoleName.Accountant),
+  validateQuery(paginationQuerySchema),
   getRoutes,
 );
 routeRouter.get(
